@@ -40,11 +40,14 @@ export default function CompaniesPage() {
     setLoading(true)
     try {
       const token = localStorage.getItem('accessToken')
-      const res = await api.get(`/admin/companies?page=${page}&limit=${pagination.limit}`, {
-        headers: {
-          access_token: token || '',
-        },
-      })
+      const res = await api.get(
+        `/admin/companies?page=${page}&limit=${pagination.limit}`,
+        {
+          headers: {
+            access_token: token || '',
+          },
+        }
+      )
 
       setCompanies(res.data.data)
       setPagination(res.data.pagination)
@@ -65,21 +68,32 @@ export default function CompaniesPage() {
     }
   }
 
-  if (loading && companies.length === 0) return <div className="p-6 text-black text-center">Loading companies...</div>
-  if (error) return <div className="p-6 text-red-500 text-center">Error: {error}</div>
+  if (loading && companies.length === 0)
+    return (
+      <div className="p-6 text-black text-center mt-10">
+        Loading companies...
+      </div>
+    )
+  if (error)
+    return (
+      <div className="p-6 text-red-500 text-center mt-10">Error: {error}</div>
+    )
 
   return (
-    <div className="p-6 text-black">
+    <div className="p-6 text-black min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Companies</h1>
         <div className="text-sm text-gray-500">
           Showing {(pagination.currentPage - 1) * pagination.limit + 1} to{' '}
-          {Math.min(pagination.currentPage * pagination.limit, pagination.totalCount)} of{' '}
-          {pagination.totalCount} results
+          {Math.min(
+            pagination.currentPage * pagination.limit,
+            pagination.totalCount
+          )}{' '}
+          of {pagination.totalCount} results
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow border overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -102,7 +116,10 @@ export default function CompaniesPage() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {companies.map((company) => (
-              <tr key={company._id} className="hover:bg-gray-50">
+              <tr
+                key={company._id}
+                className="hover:bg-gray-50 transition-colors"
+              >
                 <td className="px-6 py-4 whitespace-nowrap flex items-center">
                   {company.userId?.avatarUrl ? (
                     <img
@@ -112,10 +129,10 @@ export default function CompaniesPage() {
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-xs font-bold text-indigo-600">
-                       {company.name.charAt(0).toUpperCase()}
+                      {company.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="font-medium text-gray-900">{company.name}</span>
+                  <span className="font-medium">{company.name}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                   {company.industry || 'N/A'}
@@ -128,7 +145,7 @@ export default function CompaniesPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       company.userId?.isActive
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
@@ -148,32 +165,34 @@ export default function CompaniesPage() {
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
           disabled={pagination.currentPage === 1 || loading}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
         >
           Previous
         </button>
 
         <div className="flex gap-1">
-          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              disabled={loading}
-              className={`w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                pagination.currentPage === page
-                  ? 'bg-[#4640DE] text-white shadow-md'
-                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                disabled={loading}
+                className={`w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
+                  pagination.currentPage === page
+                    ? 'bg-[#4640DE] text-white'
+                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </button>
+            )
+          )}
         </div>
 
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
           disabled={pagination.currentPage === pagination.totalPages || loading}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
         >
           Next
         </button>
