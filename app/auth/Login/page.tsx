@@ -54,7 +54,7 @@ export default function Login() {
       </div> */}
 
       <div className="flex-1 flex justify-center items-center p-5">
-        <div className="w-full max-w-[408px] flex flex-col gap-8">
+        <div className="w-full max-w-102 flex flex-col gap-8">
           <div className="text-center lg:text-left">
             <h2 className="text-4xl font-bold text-gray-900">
               Welcome Back, Admin
