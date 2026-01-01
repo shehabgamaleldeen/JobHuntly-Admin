@@ -9,6 +9,7 @@ interface Company {
   industry: string
   location: string
   userId: {
+    _id: string
     email: string
     fullName: string
     phone: string
@@ -28,6 +29,7 @@ interface Pagination {
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [pagination, setPagination] = useState<Pagination>({
     totalCount: 0,
@@ -68,6 +70,47 @@ export default function CompaniesPage() {
     }
   }
 
+  const toggleCompanyStatus = async (company: Company) => {
+    if (!company.userId?._id) {
+      alert('Error: No associated user found for this company.')
+      return
+    }
+
+    setActionLoading(company._id)
+    try {
+      const token = localStorage.getItem('accessToken')
+      const res = await api.patch(
+        `admin/users/${company.userId._id}/status`,
+        { isActive: !company.userId.isActive },
+        {
+          headers: {
+            access_token: token || '',
+          },
+        }
+      )
+
+      if (res.data.success) {
+        setCompanies((prev) =>
+          prev.map((c) =>
+            c._id === company._id
+              ? {
+                  ...c,
+                  userId: { ...c.userId, isActive: !c.userId.isActive },
+                }
+              : c
+          )
+        )
+      }
+    } catch (err: any) {
+      alert(
+        'Failed to update company status: ' +
+          (err.response?.data?.message || err.message)
+      )
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
   if (loading && companies.length === 0)
     return (
       <div className="p-6 text-black text-center mt-10">
@@ -84,7 +127,12 @@ export default function CompaniesPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Companies</h1>
         <div className="text-sm text-gray-500">
-          Showing {(pagination.currentPage - 1) * pagination.limit + 1} to{' '}
+          Showing{' '}
+          {Math.min(
+            (pagination.currentPage - 1) * pagination.limit + 1,
+            pagination.totalCount
+          )}{' '}
+          to{' '}
           {Math.min(
             pagination.currentPage * pagination.limit,
             pagination.totalCount
@@ -111,6 +159,9 @@ export default function CompaniesPage() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
               </th>
             </tr>
           </thead>
@@ -154,6 +205,23 @@ export default function CompaniesPage() {
                     {company.userId?.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button
+                    onClick={() => toggleCompanyStatus(company)}
+                    disabled={actionLoading === company._id}
+                    className={`px-3 py-1 rounded text-xs font-bold text-white transition-colors ${
+                      company.userId?.isActive
+                        ? 'bg-red-500 hover:bg-red-600'
+                        : 'bg-green-500 hover:bg-green-600'
+                    } disabled:opacity-50`}
+                  >
+                    {actionLoading === company._id
+                      ? 'Updating...'
+                      : company.userId?.isActive
+                      ? 'Block'
+                      : 'Unblock'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -191,7 +259,9 @@ export default function CompaniesPage() {
 
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
-          disabled={pagination.currentPage === pagination.totalPages || loading}
+          disabled={
+            pagination.currentPage === pagination.totalPages || loading
+          }
           className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
         >
           Next
