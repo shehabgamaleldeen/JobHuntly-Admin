@@ -2,6 +2,7 @@
 
 import api from '@/app/utils/axiosConfig'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Company {
   _id: string
@@ -27,6 +28,7 @@ interface Pagination {
 }
 
 export default function CompaniesPage() {
+  const router = useRouter()
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
@@ -160,7 +162,7 @@ export default function CompaniesPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left flex justify-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -205,7 +207,7 @@ export default function CompaniesPage() {
                     {company.userId?.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 grid grid-cols-2 whitespace-nowrap">
                   <button
                     onClick={() => toggleCompanyStatus(company)}
                     disabled={actionLoading === company._id}
@@ -221,6 +223,14 @@ export default function CompaniesPage() {
                       ? 'Block'
                       : 'Unblock'}
                   </button>
+                  <button
+                    onClick={() =>
+                      router.push(`/dashboard/companies/${company._id}`)
+                    }
+                    className="ml-2 px-3 py-1 rounded text-xs font-bold text-white bg-blue-500 hover:bg-blue-600 transition-colors"
+                  >
+                    View Jobs
+                  </button>
                 </td>
               </tr>
             ))}
@@ -228,6 +238,7 @@ export default function CompaniesPage() {
         </table>
       </div>
 
+      {/* Pagination Controls */}
       {/* Pagination Controls */}
       <div className="mt-8 flex items-center justify-center gap-2">
         <button
@@ -238,30 +249,14 @@ export default function CompaniesPage() {
           Previous
         </button>
 
-        <div className="flex gap-1">
-          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-            (page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                disabled={loading}
-                className={`w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                  pagination.currentPage === page
-                    ? 'bg-[#4640DE] text-white'
-                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                {page}
-              </button>
-            )
-          )}
+        <div className="text-sm text-gray-700">
+          Page <span className="font-medium">{pagination.currentPage}</span> of{' '}
+          <span className="font-medium">{pagination.totalPages}</span>
         </div>
 
         <button
           onClick={() => handlePageChange(pagination.currentPage + 1)}
-          disabled={
-            pagination.currentPage === pagination.totalPages || loading
-          }
+          disabled={pagination.currentPage === pagination.totalPages || loading}
           className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
         >
           Next
