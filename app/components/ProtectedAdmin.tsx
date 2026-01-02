@@ -11,14 +11,14 @@ export default function ProtectedAdmin({
 }) {
   const router = useRouter()
 
-//   useEffect(() => {
-//     const token = localStorage.getItem("accessToken")
-//     const role = localStorage.getItem("role")
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken")
+    const role = localStorage.getItem("role")
 
-//     if (!token || role !== "ADMIN") {
-//       router.replace("/login")
-//     }
-//   }, [router])
+    if (!token || role !== "ADMIN") {
+      router.replace("/auth/Login")
+    }
+  }, [router])
 
   return <>{children}</>
 }
