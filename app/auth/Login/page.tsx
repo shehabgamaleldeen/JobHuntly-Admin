@@ -123,6 +123,19 @@ export default function Login() {
             >
               {loading ? 'Logging in...' : 'Sign In to Dashboard'}
             </button>
+
+            <div className="text-center mt-4">
+              <p className="text-gray-600">
+                Don't have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => router.push('/auth/Register')}
+                  className="text-[#4640DE] font-medium hover:underline"
+                >
+                  Register
+                </button>
+              </p>
+            </div>
           </form>
         </div>
       </div>
