@@ -197,6 +197,7 @@ export default function UsersPage() {
       </div>
 
       {/* Pagination Controls */}
+      {/* Pagination Controls */}
       <div className="mt-8 flex items-center justify-center gap-2">
         <button
           onClick={() => handlePageChange(pagination.currentPage - 1)}
@@ -206,23 +207,9 @@ export default function UsersPage() {
           Previous
         </button>
 
-        <div className="flex gap-1">
-          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-            (page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                disabled={loading}
-                className={`w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                  pagination.currentPage === page
-                    ? 'bg-[#4640DE] text-white'
-                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                {page}
-              </button>
-            )
-          )}
+        <div className="text-sm text-gray-700">
+          Page <span className="font-medium">{pagination.currentPage}</span> of{' '}
+          <span className="font-medium">{pagination.totalPages}</span>
         </div>
 
         <button
