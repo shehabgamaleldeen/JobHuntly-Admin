@@ -12,7 +12,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="h-14 bg-gray-400 border-b flex items-center justify-between px-6">
+    <nav className="h-14 bg-gray-100 border-b flex items-center justify-between px-6">
       <h1 className="font-semibold text-lg">JobHuntly Admin</h1>
 
       <button
