@@ -51,7 +51,7 @@ export default function CompanyJobsPage() {
     setLoading(true)
     try {
       const token = localStorage.getItem('accessToken')
-      const headers = { access_token: token || '' }
+      const headers = { Authorization: `Bearer ${token || ''}` }
 
       // Fetch company details (only need to do this once effectively, but ok to do here)
       const companyRes = await api.get(`/companies/${id}`, { headers })
@@ -59,7 +59,7 @@ export default function CompanyJobsPage() {
 
       // Fetch company jobs
       const jobsRes = await api.get(
-        `/companies/${id}/jobs?page=${page}&limit=${pagination.limit}`,
+        `/admin/companies/${id}/jobs?page=${page}&limit=${pagination.limit}`,
         { headers }
       )
 
@@ -101,7 +101,7 @@ export default function CompanyJobsPage() {
         { isLive: newIsLive },
         {
           headers: {
-            access_token: token || '',
+            Authorization: `Bearer ${token || ''}`,
           },
         }
       )

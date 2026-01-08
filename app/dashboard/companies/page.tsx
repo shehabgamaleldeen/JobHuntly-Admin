@@ -48,7 +48,7 @@ export default function CompaniesPage() {
         `/admin/companies?page=${page}&limit=${pagination.limit}`,
         {
           headers: {
-            access_token: token || '',
+            Authorization: `Bearer ${token || ''}`,
           },
         }
       )
@@ -86,7 +86,7 @@ export default function CompaniesPage() {
         { isActive: !company.userId.isActive },
         {
           headers: {
-            access_token: token || '',
+            Authorization: `Bearer ${token || ''}`,
           },
         }
       )
