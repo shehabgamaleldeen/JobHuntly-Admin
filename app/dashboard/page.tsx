@@ -21,7 +21,7 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('accessToken')
-        const headers = { access_token: token || '' }
+        const headers = { Authorization: `Bearer ${token || ''}` }
 
         const statsRes = await api.get('/admin/dashboard-stats', { headers })
         if (statsRes.data.success) {
