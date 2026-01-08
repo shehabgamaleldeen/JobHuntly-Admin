@@ -40,7 +40,7 @@ export default function UsersPage() {
         `admin/users?page=${page}&limit=${pagination.limit}`,
         {
           headers: {
-            access_token: token || '',
+            Authorization: `Bearer ${token || ''}`,
           },
         }
       )
@@ -73,7 +73,7 @@ export default function UsersPage() {
         { isActive: !user.isActive },
         {
           headers: {
-            access_token: token || '',
+            Authorization: `Bearer ${token || ''}`,
           },
         }
       )
