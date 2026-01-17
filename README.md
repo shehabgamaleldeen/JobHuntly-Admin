@@ -302,7 +302,7 @@ This is a capstone project for the NTI Full-Stack Development Program. Contribut
 ## 👨‍💻 Authors
 
 **Shehab Gamal El-Deen**
-- GitHub: [@shehabgamaleldeen](https://github.com/shehabgamaleldeen)
+- GitHub: [shehabgamaleldeen](https://github.com/shehabgamaleldeen)
 - LinkedIn: [Shehab Gamal El-Deen](https://www.linkedin.com/in/shehabgamaleldeen/)
 
 ## 📄 License
